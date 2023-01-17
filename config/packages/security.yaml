@@ -15,11 +15,6 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        registration:
-            pattern: ^/api/users
-            stateless: true
-            methods: [POST]
-
         login:
             pattern: ^/api/login
             stateless: true
@@ -27,11 +22,16 @@ security:
                 check_path: /api/login_check
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-        api:
-            pattern:   ^/api
+        users:
+            pattern:   ^/api/users
+            methods: [PUT, PATCH, DELETE]
             stateless: true
             jwt: ~
-
+        demos:
+            pattern:   ^/api/demos
+            methods: [POST, PUT, PATCH, DELETE]
+            stateless: true
+            jwt: ~
         main:
             lazy: true
             provider: app_user_provider
@@ -46,9 +46,8 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/users, roles: IS_AUTHENTICATED_FULLY, methods: [GET, PUT, DELETE, PATCH] }
-        - { path: ^/api/demos, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/users, roles: IS_AUTHENTICATED_FULLY, methods: [PUT, PATCH, DELETE] }
+        - { path: ^/api/demos, roles: IS_AUTHENTICATED_FULLY, methods: [POST, PUT, DELETE, PATCH] }
 
 
 when@test:
